@@ -46,6 +46,9 @@ class Graph:
     def get_edge_weight(self, from_node: int, to_node: int) -> int:
         return self._weights.get((from_node, to_node), 0)
 
+    def get_degree(self, node: int) -> int:
+        return len(self._adjacency_list.get(node, []))
+
     def get_edges(self) -> List[Tuple[int, int, int]]:
         edges: List[Tuple[int, int, int]] = []
 
@@ -55,8 +58,11 @@ class Graph:
 
         return edges
 
+    def is_empty(self) -> bool:
+        return self._nodes_count == 0
+
     def is_connected(self) -> bool:
-        if self._nodes_count == 0:
+        if self.is_empty():
             return True
 
         visited: Set[int] = set()
