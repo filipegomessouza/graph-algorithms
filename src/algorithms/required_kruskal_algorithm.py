@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from src.algorithms.algorithm import Algorithm
 from src.exceptions.invalid_required_edges_exception import InvalidRequiredEdgesException
+from src.exceptions.invalid_graph_exception import InvalidGraphException
 from src.structures.dsu import DSU
 from src.structures.graph import Graph
 
@@ -50,5 +51,8 @@ class RequiredKruskalAlgorithm(Algorithm):
                 raise InvalidRequiredEdgesException("There are edges in the required edges list that do not exist in the graph.")
 
     def _validated_graph(self) -> None:
+        if self._graph.is_empty():
+            raise InvalidGraphException("The graph must not be empty.")
+
         if not self._graph.is_connected():
-            raise InvalidRequiredEdgesException("The graph must be connected.")
+            raise InvalidGraphException("The graph must be connected.")
