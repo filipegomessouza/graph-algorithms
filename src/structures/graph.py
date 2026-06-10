@@ -84,3 +84,15 @@ class Graph:
             to_str += f"\n  {node}: {neighbors}"
 
         return to_str
+    
+    def get_nodes(self) -> List[int]:
+        return list(self._adjacency_list.keys())
+    
+    def get_edges(self) -> List[Tuple[int, int, int]]:
+        edges: List[Tuple[int, int, int]] = []
+
+        for (from_node, to_node), weight in self._weights.items():
+            if from_node < to_node:
+                edges.append((from_node, to_node, weight))
+
+        return edges
