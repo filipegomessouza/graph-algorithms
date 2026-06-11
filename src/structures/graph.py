@@ -42,6 +42,9 @@ class Graph:
 
     def has_edge(self, from_node: int, to_node: int) -> bool:
         return to_node in self._adjacency_list.get(from_node, [])
+    
+    def has_node(self, node: int) -> bool:
+        return node in self._adjacency_list
 
     def get_edge_weight(self, from_node: int, to_node: int) -> int:
         return self._weights.get((from_node, to_node), 0)

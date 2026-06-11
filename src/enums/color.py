@@ -5,3 +5,4 @@ class Color(Enum):
     RED = 'red'
     GREEN = 'green'
     BLUE = 'blue'
+    BLACK = 'black'

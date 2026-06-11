@@ -26,25 +26,28 @@ class GraphVisualizer:
         )
 
         for node in step_event.graph.get_nodes():
-            node_styles = step_event.node_styles.get(node, None)
+            node_style = step_event.node_styles.get(node, None)
+            color = node_style.color.value if node_style is not None else Color.BLACK.value
 
             visualization_graph.node(
-                name=node_styles.label if node_styles is not None and node_styles.label != '' else str(node),
-                fillcolor=node_styles.color.value if node_styles is not None else 'red',
-                penwidth="2.5" if node_styles is not None and node_styles.bold else "1.0",
-                style="filled" if node_styles is not None and node_styles.fill else "solid",
+                str(node),
+                color=color,
+                fontcolor=color,
+                penwidth="2.5" if node_style is not None and node_style.bold else "1.0",
+                style="filled" if node_style is not None and node_style.fill else "solid",
             )
 
         for u, v, weight in step_event.graph.get_edges():
-            u = min(u, v)
-            v = max(u, v)
-            edge_styles = step_event.edge_styles.get((u, v), None)
+            u, v = min(u, v), max(u, v)
+            edge_styles = step_event.edge_styles.get((u, v), step_event.edge_styles.get((v, u), None))
+            color = edge_styles.color.value if edge_styles is not None else Color.BLACK.value
 
             visualization_graph.edge(
                  str(u),
                  str(v),
                  label=str(weight),
-                 color=edge_styles.color.value if edge_styles is not None else "black",
+                 color=color,
+                 fontcolor=color,
                  penwidth="2.5" if edge_styles is not None and edge_styles.bold else "1.0",
             ),
 

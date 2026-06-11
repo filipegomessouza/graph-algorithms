@@ -1,7 +1,9 @@
-from typing import Any, List, Callable
+from typing import Any, List, Callable, Dict, Tuple
 from abc import ABC, abstractmethod
 from src.events.step_event import StepEvent
 from src.structures.graph import Graph
+from src.styles.node_style import NodeStyle
+from src.styles.edge_style import EdgeStyle
 
 StepCallback = Callable[[StepEvent], None]
 
@@ -20,7 +22,7 @@ class Algorithm(ABC):
 
         return self
     
-    def _emit_step(self, description: str, node_styles: dict = {}, edge_styles: dict = {}) -> None:
+    def _emit_step(self, description: str, node_styles: Dict[int, NodeStyle] = {}, edge_styles: Dict[Tuple[int, int], EdgeStyle] = {}) -> None:
         step_event = StepEvent(
             step=self._step,
             graph=self._graph,
