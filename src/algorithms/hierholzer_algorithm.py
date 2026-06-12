@@ -84,12 +84,14 @@ class HierholzerAlgorithm(Algorithm):
     def _emit_final_circuit(self, circuit: List[int]) -> None:
         circuit_edges = self._get_circuit_edges(circuit)
 
-        node_styles = { node: NodeStyle(str(node), Color.GREEN, bold=True) for node in self._graph.get_nodes() }
+        def edge_style(u: int, v: int) -> EdgeStyle:
+            is_in_circuit_edges = (min(u, v), max(u, v)) in circuit_edges
+            color = Color.GREEN if is_in_circuit_edges else Color.GRAY
 
-        edge_styles = {
-            (u, v): EdgeStyle(color=Color.GREEN if (min(u, v), max(u, v)) in circuit_edges else Color.GRAY, bold=(min(u, v), max(u, v)) in circuit_edges)
-            for u, v, weight in self._graph.get_edges()
-        }
+            return EdgeStyle(color=color, bold=is_in_circuit_edges)
+
+        node_styles = { node: NodeStyle(str(node), Color.GREEN, bold=True) for node in self._graph.get_nodes() }
+        edge_styles = { (u, v): edge_style(u, v) for u, v, weight in self._graph.get_edges() }
 
         self._emit_step(f'Eulerian Circuit: {" → ".join(str(n) for n in circuit)}', node_styles, edge_styles)
 
