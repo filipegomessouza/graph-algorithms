@@ -55,9 +55,9 @@ class RequiredKruskalAlgorithm(Algorithm):
             self._tree.add_edge(u, v, weight)
             weight_sum += weight
 
-            self._emit_tree('Add edge')
+            self._emit_tree(f'Add edge ({u} → {v}) with weight {weight}')
 
-        self._emit_tree('End: MST found')
+        self._emit_tree('MST found')
 
         return self._tree, weight_sum
 
@@ -81,7 +81,7 @@ class RequiredKruskalAlgorithm(Algorithm):
         node_styles[v] = NodeStyle(str(v), Color.RED, bold=True)
         edge_styles[(u, v)] = EdgeStyle(str(weight), Color.RED, bold=True)
 
-        self._emit_step('Check edge', node_styles, edge_styles)
+        self._emit_step(f'Check edge ({u} → {v})', node_styles, edge_styles)
 
     def _emit_tree(self, description: str) -> None:
         node_styles = self._get_tree_node_style()
