@@ -39,16 +39,16 @@ class GraphVisualizer:
 
         for u, v, weight in step_event.graph.get_edges():
             u, v = min(u, v), max(u, v)
-            edge_styles = step_event.edge_styles.get((u, v), step_event.edge_styles.get((v, u), None))
-            color = edge_styles.color.value if edge_styles is not None else Color.BLACK.value
+            edge_style = step_event.edge_styles.get((u, v), step_event.edge_styles.get((v, u), None))
+            color = edge_style.color.value if edge_style is not None else Color.BLACK.value
 
             visualization_graph.edge(
                  str(u),
                  str(v),
-                 label=str(weight),
+                 label=edge_style.label if edge_style is not None else str(weight),
                  color=color,
                  fontcolor=color,
-                 penwidth="2.5" if edge_styles is not None and edge_styles.bold else "1.0",
+                 penwidth="2.5" if edge_style is not None and edge_style.bold else "1.0",
             ),
 
         return visualization_graph
