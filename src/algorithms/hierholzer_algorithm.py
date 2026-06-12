@@ -41,6 +41,7 @@ class HierholzerAlgorithm(Algorithm):
 
                 self._emit_backtrack(node, current_path, circuit, visited_edges)
 
+        circuit.reverse()
         self._emit_final_circuit(circuit)
 
         return circuit
@@ -64,7 +65,7 @@ class HierholzerAlgorithm(Algorithm):
             return NodeStyle(str(node), color, bold=is_start_node)
 
         node_styles = { node: node_style(node) for node in self._graph.get_nodes() }
-        edge_styles = { (u, v): EdgeStyle(str(weight), Color.GRAY) for u, v, weight in self._graph.get_edges() }
+        edge_styles = { (u, v): EdgeStyle() for u, v, weight in self._graph.get_edges() }
 
         self._emit_step(f'Initialize: start at node {start_node}', node_styles, edge_styles)
 
@@ -86,7 +87,7 @@ class HierholzerAlgorithm(Algorithm):
         node_styles = { node: NodeStyle(str(node), Color.GREEN, bold=True) for node in self._graph.get_nodes() }
 
         edge_styles = {
-            (u, v): EdgeStyle(str(weight), Color.GREEN if (min(u, v), max(u, v)) in circuit_edges else Color.GRAY, bold=(min(u, v), max(u, v)) in circuit_edges)
+            (u, v): EdgeStyle(color=Color.GREEN if (min(u, v), max(u, v)) in circuit_edges else Color.GRAY, bold=(min(u, v), max(u, v)) in circuit_edges)
             for u, v, weight in self._graph.get_edges()
         }
 
@@ -125,13 +126,13 @@ class HierholzerAlgorithm(Algorithm):
             is_visited = (u, v) in visited_edges or (v, u) in visited_edges
 
             if is_circuit:
-                styles[(u, v)] = EdgeStyle(str(weight), Color.GREEN, bold=True)
+                styles[(u, v)] = EdgeStyle(color=Color.GREEN, bold=True)
             elif is_active:
-                styles[(u, v)] = EdgeStyle(str(weight), Color.RED, bold=True)
+                styles[(u, v)] = EdgeStyle(color=Color.RED, bold=True)
             elif is_visited:
-                styles[(u, v)] = EdgeStyle(str(weight), Color.BLUE, bold=True)
+                styles[(u, v)] = EdgeStyle(color=Color.BLUE, bold=True)
             else:
-                styles[(u, v)] = EdgeStyle(str(weight), Color.GRAY)
+                styles[(u, v)] = EdgeStyle(color=Color.GRAY)
 
         return styles
 
