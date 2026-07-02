@@ -30,7 +30,7 @@ class RequiredKruskalAlgorithm(Algorithm):
 
             if not self._dsu.union(u, v):
                 raise InvalidRequiredEdgesException("The required edges create a cycle in the graph.")
-            
+
         self._emit_tree('Add required edges')
 
         required_edges_set = set(self._required_edges)
@@ -95,14 +95,14 @@ class RequiredKruskalAlgorithm(Algorithm):
             color = Color.BLACK if node_is_in_tree else Color.GRAY
 
             return NodeStyle(str(i), color, bold=node_is_in_tree)
-        
+
         return { i: node_style(i) for i in self._graph.get_nodes() }
-    
+
     def _get_tree_edge_style(self) -> EdgeStyle:
         def edge_style(u: int, v: int, weight: int) -> EdgeStyle:
             edge_is_in_tree = self._tree.has_edge(u, v)
             color = Color.BLACK if edge_is_in_tree else Color.GRAY
 
             return EdgeStyle(str(weight), color, bold=edge_is_in_tree)
-        
+
         return { (u, v): edge_style(u, v, weight) for u, v, weight in self._graph.get_edges() }
