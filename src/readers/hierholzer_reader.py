@@ -1,7 +1,7 @@
 from src.structures.graph import Graph
 from src.readers.reader import Reader
 
-class EdgeListInstanceReader(Reader):
+class HierholzerReader(Reader):
     def __init__(self, file_path: str):
         self._file_path = file_path
 
