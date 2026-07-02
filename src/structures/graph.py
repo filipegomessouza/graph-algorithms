@@ -87,10 +87,10 @@ class Graph:
             to_str += f"\n  {node}: {neighbors}"
 
         return to_str
-    
+
     def get_nodes(self) -> List[int]:
         return list(self._adjacency_list.keys())
-    
+
     def get_edges(self) -> List[Tuple[int, int, int]]:
         edges: List[Tuple[int, int, int]] = []
 
