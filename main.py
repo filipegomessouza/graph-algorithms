@@ -1,35 +1,43 @@
-from src.structures.graph import Graph
-from src.algorithms.required_kruskal_algorithm import RequiredKruskalAlgorithm
+import glob
+import shutil
+from pathlib import Path
+from src.readers.hierholzer_reader import HierholzerReader
+from src.readers.required_kruskal_reader import RequiredKruskalReader
 from src.algorithms.hierholzer_algorithm import HierholzerAlgorithm
+from src.algorithms.required_kruskal_algorithm import RequiredKruskalAlgorithm
 from src.visualizers.graph_visualizer import GraphVisualizer
 
-required_kruskal_graph_visualizer = GraphVisualizer('output/required_kruskal')
+def run_hierholzer_instance(file_path: str) -> None:
+    instance_name = Path(file_path).stem
+    output_path = f"output/hierholzer/{instance_name}"
+    shutil.rmtree(output_path, ignore_errors=True)
 
-toy_graph = Graph()\
-    .add_edge(0, 1, 4)\
-    .add_edge(0, 2, 1)\
-    .add_edge(1, 2, 2)\
-    .add_edge(1, 3, 5)\
-    .add_edge(2, 3, 8)\
+    graph = HierholzerReader(file_path).read()
+    visualizer = GraphVisualizer(output_path)
 
-tree, weight_sum = RequiredKruskalAlgorithm(toy_graph, [(1, 0), (0, 2)])\
-    .add_listener(required_kruskal_graph_visualizer.on_step)\
-    .run()
+    circuit = HierholzerAlgorithm(graph)\
+        .add_listener(visualizer.on_step)\
+        .run()
 
-print("MST weight:", weight_sum)
+    print(f"[hierholzer/{instance_name}] Eulerian circuit:", circuit)
 
-hierholzer_graph_visualizer = GraphVisualizer('output/hierholzer')
+def run_required_kruskal_instance(file_path: str) -> None:
+    instance_name = Path(file_path).stem
+    output_path = f"output/required_kruskal/{instance_name}"
+    shutil.rmtree(output_path, ignore_errors=True)
 
-toy_graph_2 = Graph()\
-    .add_edge(1, 2)\
-    .add_edge(1, 3)\
-    .add_edge(2, 3)\
-    .add_edge(3, 4)\
-    .add_edge(3, 5)\
-    .add_edge(4, 5)\
+    graph, required_edges = RequiredKruskalReader(file_path).read()
+    required_pairs = [(from_node, to_node) for from_node, to_node, _ in required_edges]
+    visualizer = GraphVisualizer(output_path)
 
-circuit = HierholzerAlgorithm(toy_graph_2)\
-    .add_listener(hierholzer_graph_visualizer.on_step)\
-    .run()
+    tree, weight_sum = RequiredKruskalAlgorithm(graph, required_pairs)\
+        .add_listener(visualizer.on_step)\
+        .run()
 
-print("Eulerian circuit:", circuit)
+    print(f"[required_kruskal/{instance_name}] MST weight:", weight_sum)
+
+for file_path in sorted(glob.glob("instances/hierholzer_algorithm/*.txt")):
+    run_hierholzer_instance(file_path)
+
+for file_path in sorted(glob.glob("instances/required_kruskal_algorithm/*.txt")):
+    run_required_kruskal_instance(file_path)
